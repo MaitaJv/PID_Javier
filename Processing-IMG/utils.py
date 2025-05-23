@@ -6,46 +6,46 @@ from PIL import Image, ImageDraw, ImageFont
 
 @dataclass
 class Info:
-    tamanio: tuple[float, float]
+    size: tuple[float, float]
     text: str
 
 class Campo(Enum):
-    HORA = 0,
-    FECHA = 1,
+    TIME = 0,
+    DATE = 1,
     NOAA = 2
 
-def conseguirHora(cadena):
-    partes = cadena.split("_")
-    hora = partes[4][:6]
+def pickTime(fileName):
+    parts = fileName.split("_")
+    time = parts[4][:6]
     
-    return hora[:2] + ":" + hora[2:4] + ":" + hora[4:]
+    return time[:2] + ":" + time[2:4] + ":" + time[4:]
 
-def conseguirFecha(cadena):
-    partes = cadena.split("_")
-    fecha = partes[3][:8]
+def pickDate(fileName):
+    parts = fileName.split("_")
+    date = parts[3][:8]
     
-    return fecha[:4] + "/" + fecha[4:6] + "/" + fecha[6:]
+    return date[:4] + "/" + date[4:6] + "/" + date[6:]
 
-def conseguirNOAA(cadena):
-    partes = cadena.split("_")
+def pickNOAA(fileName):
+    parts = fileName.split("_")
     
-    return partes[0] + " " + partes[1]
+    return parts[0] + " " + parts[1]
 
-def crearInfo(draw, img_path, font, campo):
-    if campo == Campo.HORA: texto = "Hora de captura: " + conseguirHora(img_path)
-    if campo == Campo.FECHA: texto = "Fecha de captura: " + conseguirFecha(img_path)
-    if campo == Campo.NOAA: texto = "Capturado por: " + conseguirNOAA(img_path)
+def createInfo(draw, img_path, font, campo):
+    if campo == Campo.TIME: text = "Hora de captura: " + pickTime(img_path)
+    if campo == Campo.DATE: text = "Fecha de captura: " + pickDate(img_path)
+    if campo == Campo.NOAA: text = "Capturado por: " + pickNOAA(img_path)
 
-    bbox = draw.textbbox((0, 0), texto, font=font)
-    tam_texto = (bbox[2] - bbox[0], bbox[3] - bbox[1])
+    bbox = draw.textbbox((0, 0), text, font=font)
+    text_size = (bbox[2] - bbox[0], bbox[3] - bbox[1])
     
-    return Info(tamanio = tam_texto, text = texto)
+    return Info(size = text_size, text = text)
 
-def agregarTexto(draw, font, imagen, data_hora, campo):
+def addTexto(draw, font, image, data_hora, campo):
 
-    if campo == Campo.HORA: altura = imagen.height - 20
-    if campo == Campo.FECHA: altura = imagen.height - 50
-    if campo == Campo.NOAA: altura = imagen.height - 80
+    if campo == Campo.TIME: height = image.height - 20
+    if campo == Campo.DATE: height = image.height - 50
+    if campo == Campo.NOAA: height = image.height - 80
 
-    draw.rectangle([(80, altura), (80 + data_hora.tamanio[0] + 5, altura + data_hora.tamanio[1] + 5)], fill=(0,0,0))
-    draw.text((80, altura), data_hora.text, fill="white", font=font)
+    draw.rectangle([(80, height), (80 + data_hora.size[0] + 5, height + data_hora.size[1] + 5)], fill=(0,0,0))
+    draw.text((80, height), data_hora.text, fill="white", font=font)

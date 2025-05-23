@@ -1,40 +1,39 @@
 import sys
 import os
 from PIL import Image, ImageDraw, ImageFont
-from utils import conseguirFecha, conseguirHora,conseguirNOAA, crearInfo, agregarTexto, Info, Campo
+from utils import pickDate, pickTime,pickNOAA, createInfo, addTexto, Info, Campo
 
 #Creo los campos
-hora = Campo.HORA
-fecha = Campo.FECHA
+time = Campo.TIME
+date = Campo.DATE
 noaa = Campo.NOAA
 
 # recibe del argumento el nombre del archivo
 img_path = sys.argv[1]
 
 # lo convierto es un ImageFile para trabajarlo
-imagen = Image.open(img_path)
-#print(imagen.mode)
+image = Image.open(img_path)
 
 # Defino fuente a utilizar y creo Draw
-draw = ImageDraw.Draw(imagen)
+draw = ImageDraw.Draw(image)
 font = ImageFont.truetype("DejaVuSans.ttf", size=20)
 
-data_hora = crearInfo(draw, img_path, font, hora)
-agregarTexto(draw, font, imagen, data_hora, hora)
+data_time = createInfo(draw, img_path, font, time)
+addTexto(draw, font, image, data_time, time)
 
-data_fecha = crearInfo(draw, img_path, font, fecha)
-agregarTexto(draw, font, imagen, data_fecha, fecha)
+data_date = createInfo(draw, img_path, font, date)
+addTexto(draw, font, image, data_date, date)
 
-data_noaa = crearInfo(draw, img_path, font, noaa)
-agregarTexto(draw, font, imagen, data_noaa, noaa)
+data_noaa = createInfo(draw, img_path, font, noaa)
+addTexto(draw, font, image, data_noaa, noaa)
 
 # Agregar logo
 logo = Image.open("logo3.png").convert("RGBA")
 logo = logo.resize((200, 100))
-imagen.paste(logo, (imagen.width - 280, 10), logo)
+image.paste(logo, (image.width - 280, 10), logo)
 
-os.makedirs("imagenesProcesadas/", exist_ok=True)
-nuevo_path = "imagenesProcesadas/" + sys.argv[1][:38] + "_procesada.png"
+os.makedirs("processed-images/", exist_ok=True)
+new_path = "processed-images/" + sys.argv[1][:38] + "_processed.png"
 
 #imagen.show()
-imagen.save(nuevo_path)
+image.save(new_path)
