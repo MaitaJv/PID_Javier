@@ -10,7 +10,7 @@ pip install pillow
 ```
 
 #### Parameters 
-To execute successfully the program, this will wait for 1 parameter, the rute of the image
+To execute successfully the program, this will wait for 1 parameter, the route of the image
 ```sh
 python3 addData.py image-path/image.png
 ```
