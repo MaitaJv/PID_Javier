@@ -15,3 +15,9 @@ __pycache__/
 # Archivos de configuración de IDEs
 .vscode/
 .idea/
+
+#Carpetas
+test-images/
+
+#Archivos de prueba
+test.py

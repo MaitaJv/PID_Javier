@@ -1,7 +1,9 @@
 import sys
 import os
+import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from utils import pickDate, pickTime,pickNOAA, createInfo, addTexto, Info, Campo
+from integrator import pickDate, pickTime, pickNOAA, createInfo, addTexto, Info, Campo
+from trimmer import trim_image
 
 #Creo los campos
 time = Campo.TIME
@@ -12,7 +14,9 @@ noaa = Campo.NOAA
 img_path = sys.argv[1]
 
 # lo convierto es un ImageFile para trabajarlo
-image = Image.open(img_path)
+crud_image = Image.open(img_path)
+
+image = trim_image(crud_image)
 
 # Defino fuente a utilizar y creo Draw
 draw = ImageDraw.Draw(image)
