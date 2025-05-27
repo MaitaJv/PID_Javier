@@ -1,10 +1,7 @@
-import sys
-import os
 import numpy as np
-from PIL import Image, ImageDraw, ImageFont
-from integrator import pickDate, pickTime,pickNOAA, createInfo, addTexto, Info, Campo
+from PIL import Image
 
-def trim_image(image):
+def trim_images(image):
     BnW = image.convert("L")
     BnW_arr = np.array(BnW)
     colums_sum = BnW_arr.sum(axis=0)
@@ -18,7 +15,23 @@ def trim_image(image):
             extrems.append(index_of_black_colums[i])
             extrems.append(index_of_black_colums[i + 1])
     
-    image_trimmed = image.crop((extrems[0], 0, extrems[1], image.height))
-    image_trimmed_rgb = image_trimmed.convert("RGB")
+    if (image.width - index_of_black_colums[len(index_of_black_colums) - 1]) > 50:
+        extrems.append(index_of_black_colums[len(index_of_black_colums) - 1])
 
-    return image_trimmed_rgb
+    images_trimmeds = []
+    print(extrems)
+    for i in range(len(extrems)):
+        print(i)
+        if (i == 0): 
+            continue
+        if (i % 2 == 0): 
+            image_cuted = image.crop((extrems[i - 2], 0, extrems[i - 1], image.height))
+            image_cuted.convert("RGB")
+            images_trimmeds.append(image_cuted)
+    
+        if (i == len(extrems) - 1):
+            image_cuted = image.crop((extrems[i], 0, image.width, image.height))
+            image_cuted.convert("RGB")
+            images_trimmeds.append(image_cuted)
+
+    return images_trimmeds

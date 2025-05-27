@@ -49,3 +49,29 @@ def addTexto(draw, font, image, data_hora, campo):
 
     draw.rectangle([(80, height), (80 + data_hora.size[0] + 5, height + data_hora.size[1] + 5)], fill=(0,0,0))
     draw.text((80, height), data_hora.text, fill="white", font=font)
+
+def integrate_to_image (image, img_path):
+    #Creo los campos
+    time = Campo.TIME
+    date = Campo.DATE
+    noaa = Campo.NOAA
+
+    # Defino fuente a utilizar y creo Draw
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype("DejaVuSans.ttf", size=20)
+
+    data_time = createInfo(draw, img_path, font, time)
+    addTexto(draw, font, image, data_time, time)
+
+    data_date = createInfo(draw, img_path, font, date)
+    addTexto(draw, font, image, data_date, date)
+
+    data_noaa = createInfo(draw, img_path, font, noaa)
+    addTexto(draw, font, image, data_noaa, noaa)
+
+    # Agregar logo
+    logo = Image.open("logo3.png").convert("RGBA")
+    logo = logo.resize((200, 100))
+    image.paste(logo, (image.width - 280, 10), logo)
+
+    return image

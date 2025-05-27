@@ -1,9 +1,8 @@
 import sys
 import os
-import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from integrator import pickDate, pickTime, pickNOAA, createInfo, addTexto, Info, Campo
-from trimmer import trim_image
+from integrator import integrate_to_image, Campo
+from trimmer import trim_images
 
 #Creo los campos
 time = Campo.TIME
@@ -16,28 +15,22 @@ img_path = sys.argv[1]
 # lo convierto es un ImageFile para trabajarlo
 crud_image = Image.open(img_path)
 
-image = trim_image(crud_image)
+images = trim_images(crud_image)
+print(images)
 
-# Defino fuente a utilizar y creo Draw
-draw = ImageDraw.Draw(image)
-font = ImageFont.truetype("DejaVuSans.ttf", size=20)
+processed_images = []
 
-data_time = createInfo(draw, img_path, font, time)
-addTexto(draw, font, image, data_time, time)
-
-data_date = createInfo(draw, img_path, font, date)
-addTexto(draw, font, image, data_date, date)
-
-data_noaa = createInfo(draw, img_path, font, noaa)
-addTexto(draw, font, image, data_noaa, noaa)
-
-# Agregar logo
-logo = Image.open("logo3.png").convert("RGBA")
-logo = logo.resize((200, 100))
-image.paste(logo, (image.width - 280, 10), logo)
-
+for img in images:
+    processed_image = integrate_to_image(img, img_path)
+    processed_images.append(processed_image)
+    
 os.makedirs("processed-images/", exist_ok=True)
-new_path = "processed-images/" + sys.argv[1][:38] + "_processed.png"
 
-#imagen.show()
-image.save(new_path)
+count = 0
+while count < len(processed_images):
+    new_path = "processed-images/" + sys.argv[1][:38] + f"_processed_0{count}.png"
+    #imagen.show()
+    processed_images[count].save(new_path)
+    count += 1
+
+
